@@ -1,0 +1,65 @@
+
+data <- read.csv(file.choose(), header=T)
+head(data)
+str(data)
+tail(data)
+
+data$Benign=as.factor(data$Benign)
+data$Type_Case_Control=as.factor(data$Type_Case_Control)
+data$Number_of_first_degree_relative=as.factor(data$Number_of_first_degree_relative)
+
+group_age_at_menarche <- function(Age_at_menarche){
+    if (Age_at_menarche >= 0 & Age_at_menarche < 12){
+        return('A')
+    }else if(Age_at_menarche >= 12 & Age_at_menarche <13){
+        return('B')
+    }else if (Age_at_menarche >=13 & Age_at_menarche <14){
+        return('C ')
+    }else if (Age_at_menarche >=14){
+        return('D')
+    }
+}
+data$Age_at_menarche_cat <- sapply(data$Age_at_menarche,group_age_at_menarche)
+data$Age_at_menarche_cat <- as.factor(data$Age_at_menarche_cat)
+
+
+
+
+group_age_at_first_live_birth <- function(Age_at_first_live_birth){
+    if (Age_at_first_live_birth >= 0 & Age_at_first_live_birth < 20){
+        return('cat_1')
+    }else if(Age_at_first_live_birth >= 20 & Age_at_first_live_birth <25){
+        return('cat_2')
+    }else if (Age_at_first_live_birth >=25 & Age_at_first_live_birth <30){
+        return('cat_3 ')
+    }else if (Age_at_first_live_birth >=30){
+        return('cat_4')
+    }
+}
+data$Age_at_first_live_birth_cat <- sapply(data$Age_at_first_live_birth,group_age_at_first_live_birth)
+data$Age_at_first_live_birth_cat <- as.factor(data$Age_at_first_live_birth_cat)
+
+
+group_age <- function(Age){
+    if (Age >= 20 & Age < 30){
+        return('age_grp1')
+    }else if(Age >= 30 & Age <50){
+        return('age_grp2')
+    }else if (Age >=50 & Age <70){
+        return('age_grp3 ')
+    }else if (Age >=70){
+        return('age_grp4')
+    }
+}
+data$Age_cat <- sapply(data$Age,group_age)
+data$Age_cat <- as.factor(data$Age_cat)
+data1=data[-c(4,6,7)]
+head(data1)
+str(data1)
+
+
+model1 <- (glm(formula = Type_Case_Control ~Age_cat+Age_at_first_live_birth_cat+Age_at_menarche_cat+Number_of_first_degree_relative+Benign,
+ data=data1, family= binomial))
+summary(model1)
+
+
