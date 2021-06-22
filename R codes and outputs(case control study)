@@ -1,0 +1,101 @@
+> data <- read.csv(file.choose(), header=T)
+> head(data)
+  Sl.no sl.no Type_Case_Control Age Benign Age_at_menarche Age_at_first_live_birth
+1     1     1                 1  47      0              14                      18
+2     2     2                 1  50      1              15                      24
+3     3     3                 1  54      0              16                      30
+4     4     4                 1  43      0              13                      21
+5     5     5                 1  37      0              13                      27
+6     6     6                 1  55      0              14                      23
+  Number_of_first_degree_relative
+1                               1
+2                               1
+3                               0
+4                               0
+5                               1
+6                               0
+> str(data)
+'data.frame':   3006 obs. of  8 variables:
+ $ Sl.no                          : int  1 2 3 4 5 6 8 9 10 11 ...
+ $ sl.no                          : int  1 2 3 4 5 6 7 8 9 10 ...
+ $ Type_Case_Control              : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ Age                            : int  47 50 54 43 37 55 55 63 40 60 ...
+ $ Benign                         : int  0 1 0 0 0 0 0 0 0 0 ...
+ $ Age_at_menarche                : int  14 15 16 13 13 14 13 14 13 16 ...
+ $ Age_at_first_live_birth        : int  18 24 30 21 27 23 20 28 22 22 ...
+ $ Number_of_first_degree_relative: int  1 1 0 0 1 0 2 0 0 0 ...
+> data$Benign=as.factor(data$Benign)
+> data$Type_Case_Control=as.factor(data$Type_Case_Control)
+> data$Number_of_first_degree_relative=as.factor(data$Number_of_first_degree_relative)
+> group_age_at_menarche <- function(Age_at_menarche){
++     if (Age_at_menarche >= 0 & Age_at_menarche < 12){
++         return('A')
++     }else if(Age_at_menarche >= 12 & Age_at_menarche <13){
++         return('B')
++     }else if (Age_at_menarche >=13 & Age_at_menarche <14){
++         return('C ')
++     }else if (Age_at_menarche >=14){
++         return('D')
++     }
++ }
+> data$Age_at_menarche_cat <- sapply(data$Age_at_menarche,group_age_at_menarche)
+> data$Age_at_menarche_cat <- as.factor(data$Age_at_menarche_cat)
+> 
+> 
+> 
+> 
+> group_age_at_first_live_birth <- function(Age_at_first_live_birth){
++     if (Age_at_first_live_birth >= 0 & Age_at_first_live_birth < 20){
++         return('cat_1')
++     }else if(Age_at_first_live_birth >= 20 & Age_at_first_live_birth <25){
++         return('cat_2')
++     }else if (Age_at_first_live_birth >=25 & Age_at_first_live_birth <30){
++         return('cat_3 ')
++     }else if (Age_at_first_live_birth >=30){
++         return('cat_4')
++     }
++ }
+> data$Age_at_first_live_birth_cat <- sapply(data$Age_at_first_live_birth,group_age_at_first_live_birth)
+> data$Age_at_first_live_birth_cat <- as.factor(data$Age_at_first_live_birth_cat)
+> 
+> 
+> group_age <- function(Age){
++     if (Age >= 20 & Age < 30){
++         return('age_grp1')
++     }else if(Age >= 30 & Age <50){
++         return('age_grp2')
++     }else if (Age >=50 & Age <70){
++         return('age_grp3 ')
++     }else if (Age >=70){
++         return('age_grp4')
++     }
++ }
+> data$Age_cat <- sapply(data$Age,group_age)
+> data$Age_cat <- as.factor(data$Age_cat)
+> data1=data[-c(4,6,7)]
+> head(data1)
+  Sl.no sl.no Type_Case_Control Benign Number_of_first_degree_relative Age_at_menarche_cat
+1     1     1                 1      0                               1                   D
+2     2     2                 1      1                               1                   D
+3     3     3                 1      0                               0                   D
+4     4     4                 1      0                               0                  C 
+5     5     5                 1      0                               1                  C 
+6     6     6                 1      0                               0                   D
+  Age_at_first_live_birth_cat   Age_cat
+1                       cat_1  age_grp2
+2                       cat_2 age_grp3 
+3                       cat_4 age_grp3 
+4                       cat_2  age_grp2
+5                      cat_3   age_grp2
+6                       cat_2 age_grp3 
+> str(data1)
+'data.frame':   3006 obs. of  8 variables:
+ $ Sl.no                          : int  1 2 3 4 5 6 8 9 10 11 ...
+ $ sl.no                          : int  1 2 3 4 5 6 7 8 9 10 ...
+ $ Type_Case_Control              : Factor w/ 2 levels "0","1": 2 2 2 2 2 2 2 2 2 2 ...
+ $ Benign                         : Factor w/ 2 levels "0","1": 1 2 1 1 1 1 1 1 1 1 ...
+ $ Number_of_first_degree_relative: Factor w/ 3 levels "0","1","2": 2 2 1 1 2 1 3 1 1 1 ...
+ $ Age_at_menarche_cat            : Factor w/ 4 levels "A","B","C ","D": 4 4 4 3 3 4 3 4 3 4 ...
+ $ Age_at_first_live_birth_cat    : Factor w/ 4 levels "cat_1","cat_2",..: 1 2 4 2 3 2 2 3 2 2 ...
+ $ Age_cat                        : Factor w/ 4 levels "age_grp1","age_grp2",..: 2 3 3 2 2 3 3 3 2 3 ...
+> 
